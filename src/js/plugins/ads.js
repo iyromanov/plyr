@@ -185,7 +185,9 @@ class Ads {
     this.loader.addEventListener(google.ima.AdErrorEvent.Type.AD_ERROR, (error) => this.onAdError(error), false);
 
     // Request video ads to be pre-loaded
-    this.requestAds();
+    if (this.player.config.ads.preLoad) {
+      this.requestAds();
+    }
   }
 
   /**
@@ -434,6 +436,12 @@ class Ads {
       this.addCuePoints();
     });
 
+    this.player.on('play', () => {
+      if (!this.player.config.ads.preLoad) {
+        this.requestAds();
+      }
+    });
+
     this.player.on('ended', () => {
       this.loader.contentComplete();
     });
@@ -573,7 +581,9 @@ class Ads {
         this.initialized = false;
 
         // Now request some new advertisements
-        this.requestAds();
+        if (this.player.config.ads.preLoad) {
+          this.requestAds();
+        }
       })
       .catch(() => {});
   }

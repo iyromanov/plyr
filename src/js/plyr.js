@@ -362,7 +362,17 @@ class Plyr {
 
     // Intecept play with ads
     if (this.ads && this.ads.enabled) {
-      this.ads.managerPromise.then(() => this.ads.play()).catch(() => silencePromise(this.media.play()));
+      // Need to init ads display container here when ads request is delayed by iOS reasons
+      if (!this.config.ads.preLoad && this.ads.elements.displayContainer) {
+        this.ads.elements.displayContainer.initialize();
+        this.ads.requestAds();
+      }
+
+      this.ads.managerPromise
+        .then(() => this.ads.play())
+        .catch(() => {
+          silencePromise(this.media.play());
+        });
     }
 
     // Return the promise (for HTML5)

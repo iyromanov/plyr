@@ -436,12 +436,6 @@ class Ads {
       this.addCuePoints();
     });
 
-    this.player.on('play', () => {
-      if (!this.player.config.ads.preLoad) {
-        this.requestAds();
-      }
-    });
-
     this.player.on('ended', () => {
       this.loader.contentComplete();
     });
